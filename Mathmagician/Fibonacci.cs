@@ -8,14 +8,21 @@ namespace Mathmagician
 {
     public class Fibonacci : Integer
     {
-        private int[] elements; 
+        private int[] elements;
         public Fibonacci()
         {
             First = 1;
             elements = new int[Max];
-            for (int i = 0; i < Max; i++)
+
+            elements[0] = 1;
+            elements[1] = 1;
+            elements[2] = 2;
+            elements[3] = 3;
+            elements[4] = 5;
+
+            for (int n = 6; n < Max; n++)
             {
-                elements[i] = GetNth(i + 1);
+                elements[n - 1] = GetNthCached(n);
             }
         }
 
@@ -35,6 +42,41 @@ namespace Mathmagician
             {
                 return GetNth(n-1) + GetNth(n-2);
             }
+        }
+
+        public int GetNthCached(int n)
+        {
+            if (n <= 0) { throw new Exception(); }
+
+            if (elements[n - 1] != 0)
+            {
+                return elements[n - 1];
+            }
+            else
+            {
+
+                int first_term;
+                if (elements[n - 2] == 0)
+                {
+                    elements[n - 2] = GetNthCached(n - 1);
+                } else
+                {
+                    first_term = elements[n - 2];
+                }
+
+                int second_term;
+                if (elements[n - 3] == 0)
+                {
+                    second_term = GetNthCached(n - 2);
+                }
+                else
+                {
+                    second_term = elements[n - 3];
+                }
+
+                return first_term + second_term;
+            }
+
         }
 
         override public int[] GetSequence(int how_many)
